@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="logo-container">
-        <img src="/images/deer-hunting-logo_215413-101.png" alt="TrailHunter Logo" />
+        <img src="../../../public/images/deer-hunting-logo_215413-101.png" alt="TrailHunter Logo" />
       </div>
       <h1>TrailHunter</h1>
       <ul>

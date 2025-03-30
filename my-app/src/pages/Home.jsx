@@ -1,20 +1,21 @@
-import './css/Home.css';
-import Tree from '../components/Tree';
-function App() {
+// === pages/Home.jsx ===
+import React from "react";
+import "../css/Home.css";
+
+export default function Home() {
   return (
-    <>
-      <section className="columns">
-        <Tree 
-          name="Live Oak"
-          description="Doesn't lose it's leaves"
-          image="images/live-oak.jpeg"/>
-        <Tree 
-          name="Dogwood"
-          description="Flowers in spring"
-          image="images/dogwood.jpeg" />
+    <div className="home">
+      <section className="trip-banner">
+        <img src="/images/plantriptop.jpg" alt="Hunting Trip Banner" />
       </section>
-    </>
+
+      <section className="intro-section">
+        <h2>Welcome to TrailHunter</h2>
+        <p>
+          Plan the perfect hunting trip with our guides, gear, and planning tools.
+          Explore hunting regions, gear up, and connect with the community.
+        </p>
+      </section>
+    </div>
   );
 }
-
-export default App;

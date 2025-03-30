@@ -1,35 +1,138 @@
 .contact-page {
-    max-width: 800px;
-    margin: auto;
-    padding: 40px 20px;
+  background-color: #ffffff;
+  padding: 40px 20px;
+}
+
+.trip-banner img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 30px;
+}
+
+.contact-box {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f8f8f8;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.contact-box h2,
+.contact-box h3,
+.contact-box h4 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.contact-box p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.contact-hours ul {
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.contact-hours li {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.social-media p {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.social-media a {
+  color: #e67e22;
+  text-decoration: none;
+}
+
+.social-media a:hover {
+  text-decoration: underline;
+}
+
+form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+form label {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+form input,
+form textarea {
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+form button {
+  background-color: #2c3e50;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+
+form button:hover {
+  background-color: #1f2f40;
+}
+
+.form-feedback {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.form-feedback.success {
+  color: green;
+}
+
+.form-feedback.error {
+  color: red;
+}
+
+.iframe-container {
+  margin-top: 30px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.iframe-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 768px) {
+  .contact-box {
+    padding: 15px;
   }
-  
-  .contact-page h2, h3, h4 {
-    color: #2c3e50;
+
+  .contact-box h2 {
+    font-size: 24px;
   }
-  
-  .contact-page p {
-    font-size: 16px;
-    margin-bottom: 10px;
-    line-height: 1.5;
-  }
-  
-  .contact-hours ul {
-    margin-bottom: 20px;
-    padding-left: 20px;
-  }
-  
-  .contact-hours li {
+
+  form button {
     font-size: 14px;
-    color: #555;
+    padding: 10px;
   }
-  
-  .social-media a {
-    color: #e67e22;
-    text-decoration: none;
-  }
-  
-  .social-media a:hover {
-    text-decoration: underline;
-  }
-  
+}
