@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="home">
       <section className="trip-banner">
-        <img src="/images/plantriptop.jpg" alt="Hunting Trip Banner" />
+        <img src=".images/plantriptop.jpg" alt="Hunting Trip Banner" />
       </section>
 
       <section className="intro-section">

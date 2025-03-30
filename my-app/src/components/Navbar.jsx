@@ -1,4 +1,3 @@
-// === components/Navbar.jsx ===
 import React from "react";
 import { Link } from "react-router-dom";
 import "../css/Navbar.css";
@@ -7,7 +6,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="logo-container">
-        <img src="../../../public/images/deer-hunting-logo_215413-101.png" alt="TrailHunter Logo" />
+      <img src="/images/logo.png" alt="TrailHunter Logo" />
       </div>
       <h1>TrailHunter</h1>
       <ul>
