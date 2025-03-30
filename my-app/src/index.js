@@ -1,12 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import './index.css';
-//import App from './App';
+import Layout from './Layout';
+import Home from './pages/Home';
+import Blog from './pages/Blog';
+import About from './pages/About';
+import Nopage from './pages/Nopage';
+
+function App() {
+  return(
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="blog" element={<Blog />} />
+          <Route path="*" element={<Nopage/>} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <h1>hello j</h1>
-  /*<React.StrictMode>
+  <React.StrictMode>
     <App />
-  </React.StrictMode>*/
+  </React.StrictMode>
 );
