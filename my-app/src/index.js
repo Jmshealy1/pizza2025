@@ -1,3 +1,4 @@
+// === index.js ===
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -12,16 +13,18 @@ import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="hunting-guides" element={<Guides />} />
-        <Route path="gear-and-review" element={<Gear />} />
-        <Route path="community-hub" element={<Community />} />
-        <Route path="plan-your-trip" element={<Plan />} />
-        <Route path="contact" element={<Contact />} />
-      </Route>
-    </Routes>
-  </BrowserRouter>
+  <React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="hunting-guides" element={<Guides />} />
+          <Route path="gear-and-review" element={<Gear />} />
+          <Route path="community-hub" element={<Community />} />
+          <Route path="plan-your-trip" element={<Plan />} />
+          <Route path="contact" element={<Contact />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  </React.StrictMode>
 );
