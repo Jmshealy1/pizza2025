@@ -4,9 +4,7 @@ import "../css/Home.css";
 export default function Home() {
   return (
     <div className="home">
-      <section className="trip-banner">
-        <img src={`${process.env.PUBLIC_URL}/images/border.jpg`} alt="Hunting Trip" />
-      </section>
+      
 
       <section className="hero">
         <h2>Plan Your Next Hunting Adventure</h2>

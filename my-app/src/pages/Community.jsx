@@ -4,9 +4,7 @@ import "../css/Community.css";
 export default function Community() {
   return (
     <div className="community-page">
-      <section className="trip-banner">
-        <img src="/images/plantriptop.jpg" alt="Hunting Trip" />
-      </section>
+  
 
       <section className="community-hub">
         <div className="community-column">

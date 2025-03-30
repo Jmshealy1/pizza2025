@@ -7,6 +7,9 @@ export default function Layout() {
   return (
     <>
       <Header />
+      <div className="nav-border">
+        <img src={`${process.env.PUBLIC_URL}/images/border.jpg`} alt="Navigation Border" />
+      </div>
       <main>
         <Outlet />
       </main>

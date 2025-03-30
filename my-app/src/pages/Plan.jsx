@@ -4,9 +4,6 @@ import "../css/Plan.css";
 export default function Plan() {
   return (
     <div className="plan-page">
-      <section className="trip-banner">
-        <img src={`${process.env.PUBLIC_URL}/images/plantriptop.jpg`} alt="Hunting Trip" />
-      </section>
 
       <section className="trip-packages">
         <h2>Choose Your Hunting Package</h2>

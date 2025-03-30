@@ -1,76 +1,64 @@
-// === pages/Gear.jsx ===
-import React, { useEffect, useState } from "react";
-import GearItem from "../components/GearItem";
+import React, { useState, useEffect } from "react";
 import "../css/Gear.css";
 
 export default function Gear() {
-  const [gearList, setGearList] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [gearData, setGearData] = useState([]);
+  const [cart, setCart] = useState({});
+  const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    const fetchGear = async () => {
-      try {
-        const response = await fetch("https://raw.githubusercontent.com/Jmshealy1/jmshealy1.github.io/main/csce242/projects/part6/json/json-equipment.json");
-        if (!response.ok) throw new Error("Failed to fetch gear list");
-        const data = await response.json();
-        setGearList(data);
-      } catch (error) {
-        console.error("Error loading gear:", error);
-      }
-    };
-
-    fetchGear();
+    fetch(`${process.env.PUBLIC_URL}/json/json-equipment.json`)
+      .then((res) => res.json())
+      .then((data) => setGearData(data))
+      .catch((err) => console.error("Error loading gear data:", err));
   }, []);
 
-  const addToCart = (item, days) => {
-    const existing = cart.find((i) => i._id === item._id);
-    const updatedCart = existing
-      ? cart.map((i) => i._id === item._id ? { ...i, days, totalCost: item.pricePerDay * days } : i)
-      : [...cart, { ...item, days, totalCost: item.pricePerDay * days }];
-    setCart(updatedCart);
+  const handleAddToCart = (item) => {
+    const days = quantities[item._id] || 1;
+    const total = item.pricePerDay * days;
+    setCart((prev) => ({
+      ...prev,
+      [item._id]: { ...item, days, total }
+    }));
+    alert(`${item.name} added to cart for ${days} day(s).`);
   };
 
-  const removeFromCart = (id) => {
-    setCart(cart.filter(item => item._id !== id));
-  };
-
-  const checkout = () => {
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
-      return;
-    }
-    alert("Thank you for reserving your gear. Items will be available for pickup upon arrival.");
-    setCart([]);
+  const handleQuantityChange = (id, value) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max(1, parseInt(value) || 1)
+    }));
   };
 
   return (
     <div className="gear-page">
-      <section className="trip-banner">
-        <img src="/images/border.jpg" alt="Hunting Trip" />
-      </section>
-
-      <section className="gear-reviews">
-        <h2>Hunting Gear & Reviews</h2>
-        <div className="gear-list">
-          {gearList.map((item) => (
-            <GearItem key={item._id} item={item} onAddToCart={addToCart} />
-          ))}
-        </div>
-      </section>
-
-      <section className="cart">
-        <h2>Your Rental Cart</h2>
-        <div id="cart-items">
-          {cart.map((item) => (
-            <p key={item._id}>
-              {item.name} - ${item.pricePerDay}/day × {item.days} days = ${item.totalCost.toFixed(2)}
-              <button onClick={() => removeFromCart(item._id)}>Remove</button>
-            </p>
-          ))}
-        </div>
-        <p><strong>Total Cost:</strong> ${cart.reduce((total, item) => total + item.totalCost, 0).toFixed(2)}</p>
-        <button onClick={checkout}>Proceed to Checkout</button>
-      </section>
+      <h2>Hunting Gear & Reviews</h2>
+      <div className="gear-list">
+        {gearData.map((item) => (
+          <div key={item._id} className="gear-item">
+            <img src={item.img.replace("../../../../", "/images/")} alt={item.name} />
+            <div className="gear-info">
+              <h3>{item.name}</h3>
+              <p><strong>Material:</strong> {item.material}</p>
+              <p><strong>Rating:</strong> {item.rating}</p>
+              <p>{item.description}</p>
+              <p className="price">${item.pricePerDay} per day</p>
+              <div className="cart-controls">
+                <label>
+                  Days:{" "}
+                  <input
+                    type="number"
+                    min="1"
+                    value={quantities[item._id] || 1}
+                    onChange={(e) => handleQuantityChange(item._id, e.target.value)}
+                  />
+                </label>
+                <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -4,9 +4,6 @@ import "../css/Guides.css";
 export default function Guides() {
   return (
     <div className="guides-page">
-      <section className="trip-banner">
-        <img src={`${process.env.PUBLIC_URL}/images/border.jpg`} alt="Hunting Trip" />
-      </section>
 
       <section className="hunting-guides">
         <div className="guide">

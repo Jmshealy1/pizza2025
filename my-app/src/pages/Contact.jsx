@@ -6,9 +6,6 @@ import { handleContactFormSubmit } from "../form";
 export default function Contact() {
   return (
     <div className="contact-page">
-      <section className="trip-banner">
-        <img src="/images/plantriptop.jpg" alt="Hunting Trip" />
-      </section>
 
       <div className="contact-box">
         <h2>Contact TrailHunter</h2>
