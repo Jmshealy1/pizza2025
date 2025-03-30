@@ -1,0 +1,35 @@
+.contact-page {
+    max-width: 800px;
+    margin: auto;
+    padding: 40px 20px;
+  }
+  
+  .contact-page h2, h3, h4 {
+    color: #2c3e50;
+  }
+  
+  .contact-page p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  
+  .contact-hours ul {
+    margin-bottom: 20px;
+    padding-left: 20px;
+  }
+  
+  .contact-hours li {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .social-media a {
+    color: #e67e22;
+    text-decoration: none;
+  }
+  
+  .social-media a:hover {
+    text-decoration: underline;
+  }
+  

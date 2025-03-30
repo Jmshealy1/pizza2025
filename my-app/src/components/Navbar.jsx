@@ -1,17 +1,25 @@
-import {Outlet, Link} from "react-router-dom";
-import './css/Navigation.css';
+// === components/Navbar.jsx ===
+import React from "react";
+import { Link } from "react-router-dom";
+import "../css/Navbar.css";
 
-
-function Navigation() {
-    return (
-        <nav id="main-nav">
-            <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/about">About</Link></li>
-                <li><Link to="/blog">Blog</Link></li>
-            </ul>
-        </nav>
-    );
+const Navbar = () => {
+  return (
+    <nav className="navbar">
+      <div className="logo-container">
+        <img src="/images/deer-hunting-logo_215413-101.png" alt="TrailHunter Logo" />
+      </div>
+      <h1>TrailHunter</h1>
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/hunting-guides">Hunting Guides</Link></li>
+        <li><Link to="/gear-and-review">Gear & Reviews</Link></li>
+        <li><Link to="/community-hub">Community Hub</Link></li>
+        <li><Link to="/plan-your-trip">Plan Your Trip</Link></li>
+        <li><Link to="/contact">Contact</Link></li>
+      </ul>
+    </nav>
+  );
 };
 
-export default Navigation;
+export default Navbar;
