@@ -16,10 +16,23 @@ export default function Gear() {
   const handleAddToCart = (item) => {
     const days = quantities[item._id] || 1;
     const total = item.pricePerDay * days;
-    setCart((prev) => ({
-      ...prev,
+
+    const updatedCart = {
+      ...cart,
       [item._id]: { ...item, days, total }
-    }));
+    };
+
+    setCart(updatedCart);
+
+    // Calculate updated total cost
+    const updatedTotal = Object.values(updatedCart).reduce(
+      (sum, i) => sum + i.total,
+      0
+    );
+
+    // Save to localStorage so Plan.jsx can access it
+    localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
+
     alert(`${item.name} added to cart for ${days} day(s).`);
   };
 
@@ -30,17 +43,30 @@ export default function Gear() {
     }));
   };
 
+  const resetCart = () => {
+    setCart({});
+    localStorage.setItem("gearTotal", "0.00");
+    alert("Cart reset.");
+  };
+
   return (
     <div className="gear-page">
       <h2>Hunting Gear & Reviews</h2>
       <div className="gear-list">
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
-            <img src={item.img.replace("../../../../", "/images/")} alt={item.name} />
+            <img
+              src={item.img.replace("../../../../", "/images/")}
+              alt={item.name}
+            />
             <div className="gear-info">
               <h3>{item.name}</h3>
-              <p><strong>Material:</strong> {item.material}</p>
-              <p><strong>Rating:</strong> {item.rating}</p>
+              <p>
+                <strong>Material:</strong> {item.material}
+              </p>
+              <p>
+                <strong>Rating:</strong> {item.rating}
+              </p>
               <p>{item.description}</p>
               <p className="price">${item.pricePerDay} per day</p>
               <div className="cart-controls">
@@ -50,14 +76,23 @@ export default function Gear() {
                     type="number"
                     min="1"
                     value={quantities[item._id] || 1}
-                    onChange={(e) => handleQuantityChange(item._id, e.target.value)}
+                    onChange={(e) =>
+                      handleQuantityChange(item._id, e.target.value)
+                    }
                   />
                 </label>
-                <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
+                <button onClick={() => handleAddToCart(item)}>
+                  Add to Cart
+                </button>
               </div>
             </div>
           </div>
         ))}
+      </div>
+
+      {}
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <button onClick={resetCart}>Reset Cart</button>
       </div>
     </div>
   );

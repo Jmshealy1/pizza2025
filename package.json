@@ -19,5 +19,8 @@
   "homepage": "https://github.com/Jmshealy1/pizza2025#readme",
   "dependencies": {
     "react-router-dom": "^7.4.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
 }
