@@ -1,0 +1,59 @@
+.guides-page {
+    background-color: #f4f4f4;
+  }
+  
+  .trip-banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .hunting-guides {
+    justify-content: space-around;
+    padding: 50px 10%;
+    background: white;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .guide {
+    width: 80%;
+    text-align: center;
+    margin: 0 auto 40px auto;
+  }
+  
+  .guide img {
+    width: 100%;
+    border-radius: 10px;
+  }
+  
+  .guide-info {
+    background-color: #2c3e50;
+    color: white;
+    padding: 15px;
+    margin-top: -5px;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .guide-info h3 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .guide-info p {
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  /* Responsive Styling */
+  @media only screen and (max-width: 768px) {
+    .guide {
+      width: 95%;
+    }
+  
+    .guide-info p {
+      font-size: 13px;
+    }
+  }
+  

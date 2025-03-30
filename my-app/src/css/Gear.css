@@ -1,0 +1,243 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  
+  /* Header */
+  header {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo-container {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+  }
+  
+  .logo-container img {
+    width: 60px;
+    height: auto;
+  }
+  
+  header h1 {
+    font-size: 50px;
+    margin: 0;
+    padding-top: 10px;
+  }
+  
+  /* Menu */
+  .menu-icon {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+  
+  nav {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  /* Banner */
+  .trip-banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Gear Section */
+  .gear-reviews {
+    padding: 50px 10%;
+    background: white;
+  }
+  
+  .gear-reviews h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 40px;
+  }
+  
+  #gear-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .gear-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    width: 100%;
+  }
+  
+  .gear-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .gear-info {
+    flex: 1;
+    background-color: #2c3e50;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  
+  .gear-info h3 {
+    margin: 0 0 10px;
+    font-size: 22px;
+  }
+  
+  .gear-info p {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+  
+  .price {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 8px;
+  }
+  
+  .cart-controls {
+    margin-top: 10px;
+  }
+  
+  .cart-controls input {
+    width: 60px;
+    padding: 5px;
+    margin-right: 10px;
+  }
+  
+  .cart-controls button {
+    padding: 6px 12px;
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Cart Section */
+  .cart {
+    padding: 40px 10%;
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+    margin-top: 40px;
+  }
+  
+  .cart h2 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+  }
+  
+  #cart-items p {
+    margin: 10px 0;
+  }
+  
+  button[onclick^="checkout"] {
+    padding: 10px 20px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  /* Footer */
+  footer {
+    background: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+  }
+  
+  /* Responsive */
+  @media only screen and (max-width: 768px) {
+    .menu-icon {
+      display: block;
+    }
+  
+    nav {
+      display: none;
+      flex-direction: column;
+      background-color: #2c3e50;
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+    }
+  
+    nav.active {
+      display: flex;
+    }
+  
+    nav ul {
+      flex-direction: column;
+      width: 100%;
+    }
+  
+    nav ul li {
+      padding: 10px 0;
+    }
+  
+    nav ul li a {
+      display: block;
+      padding: 10px;
+    }
+  
+    nav ul li a:hover {
+      background-color: #e67e22;
+    }
+  
+    .gear-item {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .gear-item img {
+      margin-bottom: 10px;
+    }
+  
+    .gear-info {
+      width: 100%;
+      padding: 10px;
+    }
+  }
+  
