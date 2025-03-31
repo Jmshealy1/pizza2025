@@ -1,6 +1,6 @@
 {
-  "homepage": "/pizza2025",
-  "name": "PIZZA2025/my-app",
+  "homepage": "https://Jmshealy1.github.io/pizza2025",
+  "name": "pizza2025/my-app",
   "version": "0.1.0",
   "private": false,
   "dependencies": {
@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^3.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
