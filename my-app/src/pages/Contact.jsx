@@ -1,4 +1,3 @@
-// === pages/Contact.jsx ===
 import React from "react";
 import "../css/Contact.css";
 import { handleContactFormSubmit } from "../form";
@@ -6,7 +5,6 @@ import { handleContactFormSubmit } from "../form";
 export default function Contact() {
   return (
     <div className="contact-page">
-
       <div className="contact-box">
         <h2>Contact TrailHunter</h2>
         <p>If you have any questions about hunting guides, gear, or trip planning, feel free to reach out to us!</p>
