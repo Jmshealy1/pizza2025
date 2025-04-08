@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/Gear.css";
 
-const API_URL = "http://localhost:3001"; // ✅ Change to Render URL when deployed
+const API_URL = "http://localhost:3001";
 
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
@@ -56,7 +56,7 @@ export default function Gear() {
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
             <img
-              src={`${API_URL}/${item.img}`}
+              src={`${API_URL}/images/${item.main_image}`}
               alt={item.name}
             />
             <div className="gear-info">
