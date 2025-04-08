@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "../css/Gear.css";
 
+const API_URL = "http://localhost:3001"; // ✅ Change to Render URL when deployed
+
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
   const [cart, setCart] = useState({});
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/json/json-equipment.json`)
+    fetch(`${API_URL}/api/gear`)
       .then((res) => res.json())
       .then((data) => setGearData(data))
       .catch((err) => console.error("Error loading gear data:", err));
@@ -24,13 +26,11 @@ export default function Gear() {
 
     setCart(updatedCart);
 
-    // Calculate updated total cost
     const updatedTotal = Object.values(updatedCart).reduce(
       (sum, i) => sum + i.total,
       0
     );
 
-    // Save to localStorage so Plan.jsx can access it
     localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
 
     alert(`${item.name} added to cart for ${days} day(s).`);
@@ -56,17 +56,13 @@ export default function Gear() {
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
             <img
-              src={item.img.replace("../../../../", "/images/")}
+              src={`${API_URL}/${item.img}`}
               alt={item.name}
             />
             <div className="gear-info">
               <h3>{item.name}</h3>
-              <p>
-                <strong>Material:</strong> {item.material}
-              </p>
-              <p>
-                <strong>Rating:</strong> {item.rating}
-              </p>
+              <p><strong>Material:</strong> {item.material}</p>
+              <p><strong>Rating:</strong> {item.rating}</p>
               <p>{item.description}</p>
               <p className="price">${item.pricePerDay} per day</p>
               <div className="cart-controls">
@@ -81,16 +77,12 @@ export default function Gear() {
                     }
                   />
                 </label>
-                <button onClick={() => handleAddToCart(item)}>
-                  Add to Cart
-                </button>
+                <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
               </div>
             </div>
           </div>
         ))}
       </div>
-
-      {}
       <div style={{ marginTop: "20px", textAlign: "center" }}>
         <button onClick={resetCart}>Reset Cart</button>
       </div>
