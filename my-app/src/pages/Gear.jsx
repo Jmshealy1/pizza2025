@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/Gear.css";
-import AddGearForm from "../components/AddGearForm";
 
-const API_URL = "http://localhost:3001";
+const API_URL = "https://your-render-api.onrender.com"; // Change to your real Render URL
 
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
@@ -22,7 +21,7 @@ export default function Gear() {
 
     const updatedCart = {
       ...cart,
-      [item._id]: { ...item, days, total }
+      [item._id]: { ...item, days, total },
     };
 
     setCart(updatedCart);
@@ -32,7 +31,9 @@ export default function Gear() {
       0
     );
 
-    localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
+    const safeTotal = isNaN(updatedTotal) ? 0 : updatedTotal;
+    localStorage.setItem("gearTotal", safeTotal.toFixed(2));
+    console.log("Gear total saved:", safeTotal.toFixed(2));
 
     alert(`${item.name} added to cart for ${days} day(s).`);
   };
@@ -40,7 +41,7 @@ export default function Gear() {
   const handleQuantityChange = (id, value) => {
     setQuantities((prev) => ({
       ...prev,
-      [id]: Math.max(1, parseInt(value) || 1)
+      [id]: Math.max(1, parseInt(value) || 1),
     }));
   };
 
@@ -84,6 +85,7 @@ export default function Gear() {
           </div>
         ))}
       </div>
+
       <div style={{ marginTop: "20px", textAlign: "center" }}>
         <button onClick={resetCart}>Reset Cart</button>
       </div>
