@@ -1,111 +1,150 @@
-import React, { useState, useEffect } from "react";
-import AddGearForm from "../components/AddGearForm";
-import "../css/Gear.css";
+import "../css/AddGearForm.css";
+import React, { useState } from "react";
 
-const API_URL = "http://localhost:3001"; // Change to Render URL in production
+const AddGearForm = (props) => {
+  const [inputs, setInputs] = useState({});
+  const [result, setResult] = useState("");
 
-export default function Gear() {
-  const [gearData, setGearData] = useState([]);
-  const [cart, setCart] = useState({});
-  const [quantities, setQuantities] = useState({});
-  const [showAddDialog, setShowAddDialog] = useState(false);
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/gear`)
-      .then((res) => res.json())
-      .then((data) => setGearData(data))
-      .catch((err) => console.error("Error loading gear data:", err));
-  }, []);
-
-  const handleAddToCart = (item) => {
-    const days = quantities[item._id] || 1;
-    const total = item.pricePerDay * days;
-
-    const updatedCart = {
-      ...cart,
-      [item._id]: { ...item, days, total }
-    };
-
-    setCart(updatedCart);
-
-    const updatedTotal = Object.values(updatedCart).reduce(
-      (sum, i) => sum + i.total,
-      0
-    );
-
-    localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
-
-    alert(`${item.name} added to cart for ${days} day(s).`);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputs((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleQuantityChange = (id, value) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.max(1, parseInt(value) || 1)
-    }));
+  const handleImageChange = (e) => {
+    const { name, files } = e.target;
+    setInputs((prev) => ({ ...prev, [name]: files[0] }));
   };
 
-  const resetCart = () => {
-    setCart({});
-    localStorage.setItem("gearTotal", "0.00");
-    alert("Cart reset.");
-  };
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setResult("Sending...");
 
-  const openAddDialog = () => setShowAddDialog(true);
-  const closeAddDialog = () => setShowAddDialog(false);
+    const formData = new FormData(e.target);
 
-  const updateGearList = (newItem) => {
-    setGearData((prev) => [...prev, newItem]);
+    const response = await fetch("https://express-rlba.onrender.com/api/gear", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      setResult("Gear added successfully!");
+      e.target.reset();
+      props.updateGearList(await response.json());
+      props.closeForm();
+    } else {
+      const err = await response.json();
+      setResult(`Error: ${err.message}`);
+    }
   };
 
   return (
-    <div className="gear-page">
-      <h2>Hunting Gear & Reviews</h2>
+    <div id="add-dialog" className="w3-modal">
+      <div className="w3-modal-content">
+        <div className="w3-container">
+          <span
+            id="dialog-close"
+            className="w3-button w3-display-topright"
+            onClick={props.closeForm}
+          >
+            &times;
+          </span>
+          <form id="add-gear-form" onSubmit={onSubmit}>
+            <h3>Add New Gear</h3>
 
-      <button id="add-gear" onClick={openAddDialog}>+</button>
+            <p>
+              <label htmlFor="name">Gear Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={inputs.name || ""}
+                onChange={handleChange}
+                required
+                minLength={3}
+              />
+            </p>
 
-      {showAddDialog && (
-        <AddGearForm
-          closeForm={closeAddDialog}
-          updateGearList={updateGearList}
-        />
-      )}
+            <p>
+              <label htmlFor="pricePerDay">Price Per Day:</label>
+              <input
+                type="number"
+                id="pricePerDay"
+                name="pricePerDay"
+                value={inputs.pricePerDay || ""}
+                onChange={handleChange}
+                required
+                min={0}
+              />
+            </p>
 
-      <div className="gear-list">
-        {gearData.map((item) => (
-          <div key={item._id} className="gear-item">
-            <img
-              src={`${API_URL}/images/${item.main_image}`}
-              alt={item.name}
-            />
-            <div className="gear-info">
-              <h3>{item.name}</h3>
-              <p><strong>Material:</strong> {item.material}</p>
-              <p><strong>Rating:</strong> {item.rating}</p>
-              <p>{item.description}</p>
-              <p className="price">${item.pricePerDay} per day</p>
-              <div className="cart-controls">
-                <label>
-                  Days: {" "}
-                  <input
-                    type="number"
-                    min="1"
-                    value={quantities[item._id] || 1}
-                    onChange={(e) =>
-                      handleQuantityChange(item._id, e.target.value)
-                    }
+            <p>
+              <label htmlFor="material">Material:</label>
+              <input
+                type="text"
+                id="material"
+                name="material"
+                value={inputs.material || ""}
+                onChange={handleChange}
+                required
+              />
+            </p>
+
+            <p>
+              <label htmlFor="rating">Rating (0–5):</label>
+              <input
+                type="number"
+                id="rating"
+                name="rating"
+                value={inputs.rating || ""}
+                onChange={handleChange}
+                min="0"
+                max="5"
+                required
+              />
+            </p>
+
+            <p>
+              <label htmlFor="description">Description:</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="3"
+                value={inputs.description || ""}
+                onChange={handleChange}
+              />
+            </p>
+
+            <section className="columns">
+              <p id="img-prev-section">
+                {inputs.main_image && (
+                  <img
+                    id="img-prev"
+                    src={URL.createObjectURL(inputs.main_image)}
+                    alt="Preview"
                   />
-                </label>
-                <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+                )}
+              </p>
+              <p id="img-upload">
+                <label htmlFor="main_image">Upload Image:</label>
+                <input
+                  type="file"
+                  id="main_image"
+                  name="main_image"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                />
+              </p>
+            </section>
 
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
-        <button onClick={resetCart}>Reset Cart</button>
+            <p>
+              <button type="submit">Submit</button>
+            </p>
+            <p>{result}</p>
+          </form>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default AddGearForm;
