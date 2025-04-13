@@ -5,7 +5,6 @@ body {
     background-color: #f4f4f4;
   }
   
-  /* Header */
   header {
     background-color: #2c3e50;
     color: white;
@@ -212,7 +211,20 @@ body {
     margin-top: 40px;
   }
   
-  /* Responsive */
+  #add-gear {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #2d7dd2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+  }
   @media only screen and (max-width: 768px) {
     .menu-icon {
       display: block;
