@@ -1,63 +1,113 @@
 import React, { useState, useEffect } from "react";
-import GearItem from "../components/GearItem";
 import "../css/Gear.css";
 
-const Gear = () => {
-  const [gearItems, setGearItems] = useState([]);
+const API_URL = "https://express-rlba.onrender.com";
+
+export default function Gear() {
+  const [gearData, setGearData] = useState([]);
   const [cart, setCart] = useState({});
+  const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    fetch("/json/json-equipment.json")
+    fetch(`${API_URL}/api/gear`)
       .then((res) => res.json())
-      .then((data) => setGearItems(data))
+      .then((data) => {
+        console.log("Loaded gear data:", data);
+        setGearData(data);
+      })
       .catch((err) => console.error("Error loading gear data:", err));
   }, []);
 
-  const addToCart = (item, days) => {
-    const quantity = days > 0 ? days : 1;
-    const updatedCart = { ...cart };
-    updatedCart[item._id] = {
-      ...item,
-      days: quantity,
-      total: quantity * item.pricePerDay,
+  const handleAddToCart = (item) => {
+    console.log("Adding item to cart:", item);
+
+    const rawDays = quantities[item._id];
+    const days = isNaN(parseInt(rawDays)) || parseInt(rawDays) <= 0 ? 1 : parseInt(rawDays);
+
+    const price = Number(item.pricePerDay);
+    if (isNaN(price)) {
+      console.error("Invalid price for item:", item);
+    }
+
+    const total = isNaN(price * days) ? 0 : price * days;
+
+    const updatedCart = {
+      ...cart,
+      [item._id]: { ...item, days, total },
     };
+
     setCart(updatedCart);
-    const total = calculateTotal(updatedCart);
-    localStorage.setItem("gearTotal", total);
-    localStorage.setItem("gearCart", JSON.stringify(updatedCart));
-    updateTripTotals(total);
-    alert(`${item.name} added to cart.`);
+
+    const updatedTotal = Object.values(updatedCart).reduce(
+      (sum, i) => sum + (isNaN(i.total) ? 0 : i.total),
+      0
+    );
+
+    localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
+    console.log("Gear total saved:", updatedTotal.toFixed(2));
+
+    alert(`${item.name} added to cart for ${days} day(s).`);
   };
 
-  const calculateTotal = (cartObj) => {
-    return Object.values(cartObj)
-      .reduce((acc, item) => acc + item.total, 0)
-      .toFixed(2);
+  const handleQuantityChange = (id, value) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [id]: Math.max(1, parseInt(value) || 1),
+    }));
   };
 
-  const updateTripTotals = (gearTotal) => {
-    const tripTotalSpan = document.getElementById("trip-total");
-    const gearTotalSpan = document.getElementById("gear-total");
-
-    if (gearTotalSpan) gearTotalSpan.textContent = gearTotal;
-    if (tripTotalSpan) tripTotalSpan.textContent = gearTotal;
+  const resetCart = () => {
+    setCart({});
+    localStorage.setItem("gearTotal", "0.00");
+    alert("Cart reset.");
   };
 
-  useEffect(() => {
-    const storedTotal = localStorage.getItem("gearTotal") || "0.00";
-    updateTripTotals(storedTotal);
-  }, []);
+  const handleImageError = (e) => {
+    e.target.onerror = null;
+    e.target.src = `${API_URL}/images/default.jpg`;
+  };
 
   return (
     <div className="gear-page">
-      <h2>Gear & Reviews</h2>
+      <h2>Hunting Gear & Reviews</h2>
       <div className="gear-list">
-        {gearItems.map((item) => (
-          <GearItem key={item._id} item={item} onAddToCart={addToCart} />
-        ))}
+        {gearData.map((item) => {
+          console.log("Rendering item:", item);
+          return (
+            <div key={item._id} className="gear-item">
+              <img
+                src={`${API_URL}/images/${item.main_image ?? "default.jpg"}`}
+                alt={item.name}
+                onError={handleImageError}
+              />
+              <div className="gear-info">
+                <h3>{item.name}</h3>
+                <p><strong>Material:</strong> {item.material || "N/A"}</p>
+                <p><strong>Rating:</strong> {item.rating !== undefined ? item.rating : "N/A"}</p>
+                <p className="price">
+                  {item.pricePerDay !== undefined ? `$${item.pricePerDay} per day` : "Price N/A"}
+                </p>
+                <div className="cart-controls">
+                  <label>
+                    Days:{" "}
+                    <input
+                      type="number"
+                      min="1"
+                      value={quantities[item._id] || 1}
+                      onChange={(e) => handleQuantityChange(item._id, e.target.value)}
+                    />
+                  </label>
+                  <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <button onClick={resetCart}>Reset Cart</button>
       </div>
     </div>
   );
-};
-
-export default Gear;
+}
