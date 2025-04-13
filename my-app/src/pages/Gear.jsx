@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/Gear.css";
 
-const API_URL = "https://your-render-api.onrender.com";
+const API_URL = "https://express-rlba.onrender.com/"; 
 
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
@@ -11,7 +11,10 @@ export default function Gear() {
   useEffect(() => {
     fetch(`${API_URL}/api/gear`)
       .then((res) => res.json())
-      .then((data) => setGearData(data))
+      .then((data) => {
+        console.log("Loaded gear data:", data);
+        setGearData(data);
+      })
       .catch((err) => console.error("Error loading gear data:", err));
   }, []);
 
@@ -60,15 +63,20 @@ export default function Gear() {
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
             <img
-              src={`${API_URL}/images/${item.main_image}`}
+              src={`${API_URL}/images/${item.main_image || "default.jpg"}`}
               alt={item.name}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = `${API_URL}/images/default.jpg`;
+              }}
             />
             <div className="gear-info">
               <h3>{item.name}</h3>
-              <p><strong>Material:</strong> {item.material}</p>
-              <p><strong>Rating:</strong> {item.rating}</p>
-              <p>{item.description}</p>
-              <p className="price">${item.pricePerDay} per day</p>
+              <p><strong>Material:</strong> {item.material || "N/A"}</p>
+              <p><strong>Rating:</strong> {item.rating !== undefined ? item.rating : "N/A"}</p>
+              <p className="price">
+                {item.pricePerDay !== undefined ? `$${item.pricePerDay} per day` : "Price N/A"}
+              </p>
               <div className="cart-controls">
                 <label>
                   Days:{" "}
