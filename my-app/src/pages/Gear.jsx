@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import AddGearForm from "../components/AddGearForm";
 import "../css/Gear.css";
 
-const API_URL = "https://express-rlba.onrender.com/"; 
+const API_URL = "https://express-rlba.onrender.com"; 
 
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
   const [cart, setCart] = useState({});
   const [quantities, setQuantities] = useState({});
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/gear`)
@@ -22,7 +24,7 @@ export default function Gear() {
     const rawDays = quantities[item._id];
     const days = isNaN(parseInt(rawDays)) || parseInt(rawDays) <= 0 ? 1 : parseInt(rawDays);
 
-    const price = parseFloat(item.pricePerDay);
+    const price = parseFloat(item.pricePerDay ?? 0);
     const total = isNaN(price * days) ? 0 : price * days;
 
     const updatedCart = {
@@ -56,19 +58,38 @@ export default function Gear() {
     alert("Cart reset.");
   };
 
+  const handleImageError = (e) => {
+    e.target.onerror = null;
+    e.target.src = `${API_URL}/images/default.jpg`;
+  };
+
+  const openAddDialog = () => setShowAddDialog(true);
+  const closeAddDialog = () => setShowAddDialog(false);
+
+  const updateGearList = (newItem) => {
+    setGearData((prev) => [...prev, newItem]);
+  };
+
   return (
     <div className="gear-page">
       <h2>Hunting Gear & Reviews</h2>
+
+      <button id="add-gear" onClick={openAddDialog}>+</button>
+
+      {showAddDialog && (
+        <AddGearForm
+          closeForm={closeAddDialog}
+          updateGearList={updateGearList}
+        />
+      )}
+
       <div className="gear-list">
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
             <img
-              src={`${API_URL}/images/${item.main_image || "default.jpg"}`}
+              src={`${API_URL}/images/${item.main_image ?? "default.jpg"}`}
               alt={item.name}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = `${API_URL}/images/default.jpg`;
-              }}
+              onError={handleImageError}
             />
             <div className="gear-info">
               <h3>{item.name}</h3>
@@ -79,14 +100,12 @@ export default function Gear() {
               </p>
               <div className="cart-controls">
                 <label>
-                  Days:{" "}
+                  Days: {" "}
                   <input
                     type="number"
                     min="1"
                     value={quantities[item._id] || 1}
-                    onChange={(e) =>
-                      handleQuantityChange(item._id, e.target.value)
-                    }
+                    onChange={(e) => handleQuantityChange(item._id, e.target.value)}
                   />
                 </label>
                 <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
