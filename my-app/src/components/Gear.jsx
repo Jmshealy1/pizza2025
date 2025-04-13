@@ -1,4 +1,4 @@
-/*import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import GearItem from "../components/GearItem";
 import "../css/Gear.css";
 
