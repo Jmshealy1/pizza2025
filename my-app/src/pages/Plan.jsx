@@ -1,4 +1,3 @@
-// === Plan.jsx ===
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "../css/Plan.css";
@@ -13,24 +12,29 @@ const Plan = () => {
 
   const location = useLocation();
 
-  useEffect(() => {
-    const storedGear = parseFloat(localStorage.getItem("gearTotal") || "0.00");
-    const days = calculateDuration(startDate, endDate);
-    const gearCost = storedGear * days;
-    setGearTotal(gearCost);
-    setTripTotal(gearCost + packagePrice);
-  }, [location.pathname, packagePrice, startDate, endDate]);
-
+  // ✅ Calculate duration safely
   const calculateDuration = (start, end) => {
     if (!start || !end) return 1;
     const s = new Date(start);
     const e = new Date(end);
     const diff = e - s;
     const days = Math.max(1, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-    setNumDays(days);
     return days;
   };
 
+  // ✅ Recalculate totals when relevant values change
+  useEffect(() => {
+    const storedGear = parseFloat(localStorage.getItem("gearTotal")) || 0;
+    const days = calculateDuration(startDate, endDate);
+    setNumDays(days);
+    const newGearTotal = storedGear * days;
+    const newTripTotal = newGearTotal + packagePrice;
+
+    setGearTotal(newGearTotal);
+    setTripTotal(newTripTotal);
+  }, [location.pathname, packagePrice, startDate, endDate]);
+
+  // ✅ Package price logic
   const handlePackageChange = (e) => {
     const value = e.target.value;
     let price = 0;
@@ -39,11 +43,6 @@ const Plan = () => {
     else if (value === "ultimate") price = 2500;
 
     setPackagePrice(price);
-
-    const storedGear = parseFloat(localStorage.getItem("gearTotal") || "0.00");
-    const days = calculateDuration(startDate, endDate);
-    setGearTotal(storedGear * days);
-    setTripTotal(storedGear * days + price);
   };
 
   const handleStartDateChange = (e) => {
@@ -62,13 +61,12 @@ const Plan = () => {
   const resetCart = () => {
     localStorage.setItem("gearTotal", "0.00");
     setGearTotal(0);
-    setTripTotal(packagePrice); // Only the package price remains
+    setTripTotal(packagePrice); // fallback to package only
     alert("Rental gear cart reset.");
   };
 
   return (
     <div className="plan-trip">
-    
       <section className="trip-packages">
         <h2>Choose Your Hunting Package</h2>
         <div className="packages-container">
@@ -92,7 +90,7 @@ const Plan = () => {
 
       <section className="trip-form-container">
         <div className="trip-image">
-        <img src={`${process.env.PUBLIC_URL}/images/plantripleft.jpg`} alt="Plan Trip" />
+          <img src={`${process.env.PUBLIC_URL}/images/plantripleft.jpg`} alt="Plan Trip" />
         </div>
 
         <form className="trip-form" onSubmit={handleSubmit}>
@@ -150,6 +148,7 @@ const Plan = () => {
             />
           </div>
 
+          <h3>Days Selected: {numDays} day(s)</h3>
           <h3>Rental Gear Total: ${gearTotal.toFixed(2)}</h3>
           <h3>Trip Total: ${tripTotal.toFixed(2)}</h3>
 
