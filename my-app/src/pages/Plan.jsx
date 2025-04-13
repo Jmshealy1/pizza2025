@@ -12,6 +12,7 @@ const Plan = () => {
 
   const location = useLocation();
 
+  // ✅ Calculate duration safely
   const calculateDuration = (start, end) => {
     if (!start || !end) return 1;
     const s = new Date(start);
@@ -21,16 +22,11 @@ const Plan = () => {
     return days;
   };
 
-  // ✅ Calculate totals safely
+  // ✅ Recalculate totals when relevant values change
   useEffect(() => {
-    const storedGearString = localStorage.getItem("gearTotal");
-    const storedGear = !isNaN(parseFloat(storedGearString))
-      ? parseFloat(storedGearString)
-      : 0;
-
+    const storedGear = parseFloat(localStorage.getItem("gearTotal")) || 0;
     const days = calculateDuration(startDate, endDate);
     setNumDays(days);
-
     const newGearTotal = storedGear * days;
     const newTripTotal = newGearTotal + packagePrice;
 
@@ -38,6 +34,7 @@ const Plan = () => {
     setTripTotal(newTripTotal);
   }, [location.pathname, packagePrice, startDate, endDate]);
 
+  // ✅ Package price logic
   const handlePackageChange = (e) => {
     const value = e.target.value;
     let price = 0;
@@ -64,7 +61,7 @@ const Plan = () => {
   const resetCart = () => {
     localStorage.setItem("gearTotal", "0.00");
     setGearTotal(0);
-    setTripTotal(packagePrice);
+    setTripTotal(packagePrice); // fallback to package only
     alert("Rental gear cart reset.");
   };
 
