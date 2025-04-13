@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/Gear.css";
 
-const API_URL = "https://your-render-api.onrender.com"; // Change to your real Render URL
+const API_URL = "https://your-render-api.onrender.com"; 
 
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
