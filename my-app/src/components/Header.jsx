@@ -51,4 +51,4 @@ export default function Header() {
     </header>
   );
 }
-Console.log("");
+console.log("");
