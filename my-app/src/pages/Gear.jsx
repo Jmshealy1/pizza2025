@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/Gear.css";
 
-const API_URL = "https://your-render-api.onrender.com"; 
+const API_URL = "https://your-render-api.onrender.com";
 
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
@@ -16,8 +16,11 @@ export default function Gear() {
   }, []);
 
   const handleAddToCart = (item) => {
-    const days = quantities[item._id] || 1;
-    const total = item.pricePerDay * days;
+    const rawDays = quantities[item._id];
+    const days = isNaN(parseInt(rawDays)) || parseInt(rawDays) <= 0 ? 1 : parseInt(rawDays);
+
+    const price = parseFloat(item.pricePerDay);
+    const total = isNaN(price * days) ? 0 : price * days;
 
     const updatedCart = {
       ...cart,
@@ -27,13 +30,12 @@ export default function Gear() {
     setCart(updatedCart);
 
     const updatedTotal = Object.values(updatedCart).reduce(
-      (sum, i) => sum + i.total,
+      (sum, i) => sum + (isNaN(i.total) ? 0 : i.total),
       0
     );
 
-    const safeTotal = isNaN(updatedTotal) ? 0 : updatedTotal;
-    localStorage.setItem("gearTotal", safeTotal.toFixed(2));
-    console.log("Gear total saved:", safeTotal.toFixed(2));
+    localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
+    console.log("Gear total saved:", updatedTotal.toFixed(2));
 
     alert(`${item.name} added to cart for ${days} day(s).`);
   };
