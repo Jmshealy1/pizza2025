@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AddGearForm from "../components/AddGearForm";
 import "../css/Gear.css";
 
-const API_URL = "https://express-rlba.onrender.com"; 
+const API_URL = "https://express-rlba.onrender.com";
 
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
@@ -40,8 +40,6 @@ export default function Gear() {
     );
 
     localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
-    console.log("Gear total saved:", updatedTotal.toFixed(2));
-
     alert(`${item.name} added to cart for ${days} day(s).`);
   };
 
@@ -70,6 +68,21 @@ export default function Gear() {
     setGearData((prev) => [...prev, newItem]);
   };
 
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this gear?");
+    if (!confirmDelete) return;
+
+    const response = await fetch(`${API_URL}/api/gear/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      setGearData((prev) => prev.filter((item) => item._id !== id));
+    } else {
+      alert("Failed to delete item.");
+    }
+  };
+
   return (
     <div className="gear-page">
       <h2>Hunting Gear & Reviews</h2>
@@ -87,20 +100,20 @@ export default function Gear() {
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
             <img
-              src={`${API_URL}/images/${item.main_image ?? "default.jpg"}`}
+              src={item.main_image ? `${API_URL}/images/${item.main_image}` : `${API_URL}/images/default.jpg`}
               alt={item.name}
               onError={handleImageError}
             />
             <div className="gear-info">
               <h3>{item.name}</h3>
               <p><strong>Material:</strong> {item.material || "N/A"}</p>
-              <p><strong>Rating:</strong> {item.rating !== undefined ? item.rating : "N/A"}</p>
+              <p><strong>Rating:</strong> {item.rating ?? "N/A"}</p>
               <p className="price">
                 {item.pricePerDay !== undefined ? `$${item.pricePerDay} per day` : "Price N/A"}
               </p>
               <div className="cart-controls">
                 <label>
-                  Days: {" "}
+                  Days:{" "}
                   <input
                     type="number"
                     min="1"
@@ -109,6 +122,7 @@ export default function Gear() {
                   />
                 </label>
                 <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
+                <button className="delete-btn" onClick={() => handleDelete(item._id)}>Delete</button>
               </div>
             </div>
           </div>
