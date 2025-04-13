@@ -12,7 +12,6 @@ const Plan = () => {
 
   const location = useLocation();
 
-  // ✅ Calculate duration safely
   const calculateDuration = (start, end) => {
     if (!start || !end) return 1;
     const s = new Date(start);
@@ -22,19 +21,24 @@ const Plan = () => {
     return days;
   };
 
-  // ✅ Recalculate totals when relevant values change
+  const getValidGearTotal = () => {
+    const stored = localStorage.getItem("gearTotal");
+    const parsed = parseFloat(stored);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
   useEffect(() => {
-    const storedGear = parseFloat(localStorage.getItem("gearTotal")) || 0;
     const days = calculateDuration(startDate, endDate);
     setNumDays(days);
-    const newGearTotal = storedGear * days;
-    const newTripTotal = newGearTotal + packagePrice;
 
-    setGearTotal(newGearTotal);
-    setTripTotal(newTripTotal);
+    const storedGear = getValidGearTotal();
+    const calculatedGearTotal = storedGear * days;
+    setGearTotal(calculatedGearTotal);
+
+    const calculatedTripTotal = calculatedGearTotal + packagePrice;
+    setTripTotal(calculatedTripTotal);
   }, [location.pathname, packagePrice, startDate, endDate]);
 
-  // ✅ Package price logic
   const handlePackageChange = (e) => {
     const value = e.target.value;
     let price = 0;
@@ -61,7 +65,7 @@ const Plan = () => {
   const resetCart = () => {
     localStorage.setItem("gearTotal", "0.00");
     setGearTotal(0);
-    setTripTotal(packagePrice); // fallback to package only
+    setTripTotal(packagePrice);
     alert("Rental gear cart reset.");
   };
 
@@ -90,7 +94,10 @@ const Plan = () => {
 
       <section className="trip-form-container">
         <div className="trip-image">
-          <img src={`${process.env.PUBLIC_URL}/images/plantripleft.jpg`} alt="Plan Trip" />
+          <img
+            src={`${process.env.PUBLIC_URL}/images/plantripleft.jpg`}
+            alt="Plan Trip"
+          />
         </div>
 
         <form className="trip-form" onSubmit={handleSubmit}>
