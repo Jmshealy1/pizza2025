@@ -1,0 +1,83 @@
+[
+    {
+      "_id": 1,
+      "name": "Remington 700 Rifle",
+      "type": "rifle",
+      "pricePerDay": 55,
+      "material": "Steel & Wood",
+      "main_image": "remington700.jpg",
+      "description": "Bolt-action hunting rifle with exceptional accuracy.",
+      "rating": 4.8
+    },
+    {
+      "_id": 2,
+      "name": "Benelli Shotgun",
+      "type": "shotgun",
+      "pricePerDay": 45,
+      "material": "Steel & Synthetic",
+      "main_image": "benelli.jpg",
+      "description": "Semi-automatic shotgun ideal for waterfowl.",
+      "rating": 4.9
+    },
+    {
+      "_id": 3,
+      "name": "CVA Wolf Black Powder Rifle",
+      "type": "black-powder",
+      "pricePerDay": 40,
+      "material": "Wood & Iron",
+      "main_image": "cva.jpg",
+      "description": "Classic muzzleloader rifle, accurate and reliable.",
+      "rating": 4.5
+    },
+    {
+      "_id": 4,
+      "name": "Leupold VX-Freedom",
+      "type": "scope",
+      "pricePerDay": 20,
+      "material": "Aluminum & Glass",
+      "main_image": "leupold.jpg",
+      "description": "High-quality rifle scope with crystal-clear optics.",
+      "rating": 4.8
+    },
+    {
+      "_id": 5,
+      "name": "Vortex Diamondback",
+      "type": "scope",
+      "pricePerDay": 18,
+      "material": "Aluminum & Multi-coated Glass",
+      "main_image": "vortex.jpg",
+      "description": "Budget-friendly scope with excellent optics.",
+      "rating": 4.7
+    },
+    {
+      "_id": 6,
+      "name": "Irish Setter Hunting Boots",
+      "type": "boots",
+      "pricePerDay": 10,
+      "material": "Leather & Gore-Tex",
+      "main_image": "irishsetter.jpg",
+      "description": "Waterproof boots suitable for rugged terrain.",
+      "rating": 4.9
+    },
+    {
+      "_id": 7,
+      "name": "Eberlestock Backpack",
+      "type": "backpack",
+      "pricePerDay": 8,
+      "material": "Ripstop Nylon",
+      "main_image": "eberlestock.jpg",
+      "description": "Durable backpack for long hunting trips.",
+      "rating": 4.8
+    },
+    {
+      "_id": 8,
+      "name": "Badlands 2200 Pack",
+      "type": "backpack",
+      "pricePerDay": 12,
+      "material": "Cordura Nylon",
+      "main_image": "badlands.jpg",
+      "description": "Heavy-duty hunting backpack with ample storage.",
+      "rating": 4.8
+    }
+  ]
+  
