@@ -12,24 +12,23 @@ export default function Gear() {
     fetch(`${API_URL}/api/gear`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Loaded gear data:", data);
         setGearData(data);
       })
       .catch((err) => console.error("Error loading gear data:", err));
   }, []);
 
   const handleAddToCart = (item) => {
-    console.log("Adding item to cart:", item);
-
     const rawDays = quantities[item._id];
     const days = isNaN(parseInt(rawDays)) || parseInt(rawDays) <= 0 ? 1 : parseInt(rawDays);
 
     const price = Number(item.pricePerDay);
     if (isNaN(price)) {
       console.error("Invalid price for item:", item);
+      alert("This item has an invalid price.");
+      return;
     }
 
-    const total = isNaN(price * days) ? 0 : price * days;
+    const total = price * days;
 
     const updatedCart = {
       ...cart,
@@ -44,8 +43,6 @@ export default function Gear() {
     );
 
     localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
-    console.log("Gear total saved:", updatedTotal.toFixed(2));
-
     alert(`${item.name} added to cart for ${days} day(s).`);
   };
 
@@ -71,38 +68,35 @@ export default function Gear() {
     <div className="gear-page">
       <h2>Hunting Gear & Reviews</h2>
       <div className="gear-list">
-        {gearData.map((item) => {
-          console.log("Rendering item:", item);
-          return (
-            <div key={item._id} className="gear-item">
-              <img
-                src={`${API_URL}/images/${item.main_image ?? "default.jpg"}`}
-                alt={item.name}
-                onError={handleImageError}
-              />
-              <div className="gear-info">
-                <h3>{item.name}</h3>
-                <p><strong>Material:</strong> {item.material || "N/A"}</p>
-                <p><strong>Rating:</strong> {item.rating !== undefined ? item.rating : "N/A"}</p>
-                <p className="price">
-                  {item.pricePerDay !== undefined ? `$${item.pricePerDay} per day` : "Price N/A"}
-                </p>
-                <div className="cart-controls">
-                  <label>
-                    Days:{" "}
-                    <input
-                      type="number"
-                      min="1"
-                      value={quantities[item._id] || 1}
-                      onChange={(e) => handleQuantityChange(item._id, e.target.value)}
-                    />
-                  </label>
-                  <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
-                </div>
+        {gearData.map((item) => (
+          <div key={item._id} className="gear-item">
+            <img
+              src={`${API_URL}/images/${item.main_image || "default.jpg"}`}
+              alt={item.name}
+              onError={handleImageError}
+            />
+            <div className="gear-info">
+              <h3>{item.name}</h3>
+              <p><strong>Material:</strong> {item.material || "N/A"}</p>
+              <p><strong>Rating:</strong> {item.rating !== undefined ? item.rating : "N/A"}</p>
+              <p className="price">
+                {item.pricePerDay !== undefined ? `$${Number(item.pricePerDay).toFixed(2)} per day` : "Price N/A"}
+              </p>
+              <div className="cart-controls">
+                <label>
+                  Days:{" "}
+                  <input
+                    type="number"
+                    min="1"
+                    value={quantities[item._id] || 1}
+                    onChange={(e) => handleQuantityChange(item._id, e.target.value)}
+                  />
+                </label>
+                <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
       <div style={{ marginTop: "20px", textAlign: "center" }}>
