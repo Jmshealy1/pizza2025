@@ -11,39 +11,20 @@ export default function Gear() {
   useEffect(() => {
     fetch(`${API_URL}/api/gear`)
       .then((res) => res.json())
-      .then((data) => {
-        setGearData(data);
-      })
-      .catch((err) => console.error("Error loading gear data:", err));
+      .then((data) => setGearData(data))
+      .catch((err) => console.error("Error loading gear:", err));
   }, []);
 
   const handleAddToCart = (item) => {
-    const rawDays = quantities[item._id];
-    const days = isNaN(parseInt(rawDays)) || parseInt(rawDays) <= 0 ? 1 : parseInt(rawDays);
-
-    const price = Number(item.pricePerDay);
-    if (isNaN(price)) {
-      console.error("Invalid price for item:", item);
-      alert("This item has an invalid price.");
-      return;
-    }
-
-    const total = price * days;
-
+    const days = Math.max(1, parseInt(quantities[item._id]) || 1);
+    const total = item.pricePerDay * days;
     const updatedCart = {
       ...cart,
       [item._id]: { ...item, days, total },
     };
-
     setCart(updatedCart);
-
-    const updatedTotal = Object.values(updatedCart).reduce(
-      (sum, i) => sum + (isNaN(i.total) ? 0 : i.total),
-      0
-    );
-
-    localStorage.setItem("gearTotal", updatedTotal.toFixed(2));
-    alert(`${item.name} added to cart for ${days} day(s).`);
+    localStorage.setItem("gearTotal", total.toFixed(2));
+    alert(`${item.name} added for ${days} day(s).`);
   };
 
   const handleQuantityChange = (id, value) => {
@@ -71,35 +52,30 @@ export default function Gear() {
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
             <img
-              src={`${API_URL}/images/${item.main_image || "default.jpg"}`}
+              src={`${API_URL}/${item.main_image || "images/default.jpg"}`}
               alt={item.name}
               onError={handleImageError}
             />
             <div className="gear-info">
               <h3>{item.name}</h3>
-              <p><strong>Material:</strong> {item.material || "N/A"}</p>
-              <p><strong>Rating:</strong> {item.rating !== undefined ? item.rating : "N/A"}</p>
-              <p className="price">
-                {item.pricePerDay !== undefined ? `$${Number(item.pricePerDay).toFixed(2)} per day` : "Price N/A"}
-              </p>
-              <div className="cart-controls">
-                <label>
-                  Days:{" "}
-                  <input
-                    type="number"
-                    min="1"
-                    value={quantities[item._id] || 1}
-                    onChange={(e) => handleQuantityChange(item._id, e.target.value)}
-                  />
-                </label>
-                <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
-              </div>
+              <p><strong>Material:</strong> {item.material}</p>
+              <p><strong>Rating:</strong> {item.rating}</p>
+              <p className="price">${item.pricePerDay.toFixed(2)} per day</p>
+              <label>
+                Days:
+                <input
+                  type="number"
+                  min="1"
+                  value={quantities[item._id] || 1}
+                  onChange={(e) => handleQuantityChange(item._id, e.target.value)}
+                />
+              </label>
+              <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
             </div>
           </div>
         ))}
       </div>
-
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
         <button onClick={resetCart}>Reset Cart</button>
       </div>
     </div>

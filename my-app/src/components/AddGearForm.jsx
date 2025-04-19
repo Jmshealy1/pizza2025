@@ -23,14 +23,10 @@ export default function AddGear() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const form = new FormData();
-    form.append("name", formData.name);
-    form.append("material", formData.material);
-    form.append("pricePerDay", formData.pricePerDay);
-    form.append("rating", formData.rating);
-    form.append("description", formData.description);
-    form.append("main_image", formData.main_image);
+    Object.entries(formData).forEach(([key, val]) => {
+      form.append(key, val);
+    });
 
     try {
       const res = await fetch(`${API_URL}/api/gear`, {
@@ -39,58 +35,27 @@ export default function AddGear() {
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to upload gear.");
+        const error = await res.json();
+        throw new Error(error.message || "Upload failed");
       }
 
       const result = await res.json();
       alert(`Gear added: ${result.name}`);
     } catch (err) {
-      console.error(err);
       alert("Error: " + err.message);
     }
   };
 
   return (
-    <div className="add-gear-form" style={{ maxWidth: "500px", margin: "2rem auto" }}>
+    <div style={{ maxWidth: "500px", margin: "auto" }}>
       <h2>Add New Gear</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <label>
-          Name:
-          <input type="text" name="name" required onChange={handleChange} />
-        </label>
-        <br />
-
-        <label>
-          Material:
-          <input type="text" name="material" required onChange={handleChange} />
-        </label>
-        <br />
-
-        <label>
-          Price Per Day:
-          <input type="number" name="pricePerDay" step="0.01" required onChange={handleChange} />
-        </label>
-        <br />
-
-        <label>
-          Rating:
-          <input type="number" name="rating" step="0.1" min="0" max="5" required onChange={handleChange} />
-        </label>
-        <br />
-
-        <label>
-          Description:
-          <input type="text" name="description" onChange={handleChange} />
-        </label>
-        <br />
-
-        <label>
-          Image:
-          <input type="file" name="main_image" accept="image/*" required onChange={handleChange} />
-        </label>
-        <br />
-
+        <input type="text" name="name" placeholder="Name" required onChange={handleChange} />
+        <input type="text" name="material" placeholder="Material" required onChange={handleChange} />
+        <input type="number" name="pricePerDay" placeholder="Price Per Day" step="0.01" required onChange={handleChange} />
+        <input type="number" name="rating" placeholder="Rating" step="0.1" min="0" max="5" required onChange={handleChange} />
+        <input type="text" name="description" placeholder="Description" onChange={handleChange} />
+        <input type="file" name="main_image" accept="image/*" required onChange={handleChange} />
         <button type="submit">Add Gear</button>
       </form>
     </div>
