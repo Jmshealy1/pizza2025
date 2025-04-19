@@ -100,7 +100,7 @@ export default function Gear() {
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
             <img
-              src={item.main_image ? `${API_URL}/images/${item.main_image}` : `${API_URL}/images/default.jpg`}
+              src={item.main_image ? `${API_URL}/${item.main_image}` : `${API_URL}/images/default.jpg`}
               alt={item.name}
               onError={handleImageError}
             />
