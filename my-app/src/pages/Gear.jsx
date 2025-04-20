@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import AddGearForm from "../components/AddGearForm";
 import "../css/Gear.css";
 
-const API_URL = "https://express-rlba.onrender.com";
+// Automatically switch between local dev and production
+const API_URL = window.location.hostname.includes("localhost")
+  ? "http://localhost:3001"
+  : "https://express-rlba.onrender.com";
 
 export default function Gear() {
   const [gearData, setGearData] = useState([]);
