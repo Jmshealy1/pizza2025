@@ -63,9 +63,14 @@ export default function Gear() {
   const closeAddDialog = () => setShowAddDialog(false);
 
   const updateGearList = (newItem) => {
+    if (newItem.main_image?.includes("/")) {
+      const parts = newItem.main_image.split("/");
+      newItem.main_image = parts[parts.length - 1];
+    }
+
     setGearData((prev) => {
-      const exists = prev.some((item) => item._id === newItem._id || item.name === newItem.name);
-      return exists ? prev : [...prev, newItem];
+      const filtered = prev.filter((item) => item._id !== newItem._id);
+      return [...filtered, newItem];
     });
   };
 
@@ -90,17 +95,18 @@ export default function Gear() {
       <button id="add-gear" onClick={openAddDialog}>+</button>
 
       {showAddDialog && (
-        <>
-          <div className="form-overlay" onClick={closeAddDialog}></div>
-          <AddGearForm closeForm={closeAddDialog} updateGearList={updateGearList} />
-        </>
+        <div className="w3-modal" style={{ display: "block" }}>
+          <div className="w3-modal-content">
+            <AddGearForm closeForm={closeAddDialog} updateGearList={updateGearList} />
+          </div>
+        </div>
       )}
 
       <div className="gear-list">
         {gearData.map((item) => (
           <div key={item._id} className="gear-item">
             <img
-              src={item.main_image ? `${API_URL}/${item.main_image}` : `${API_URL}/images/default.jpg`}
+              src={`${API_URL}/images/${(item.main_image ?? "default.jpg").replace(/^images\//, "")}`}
               alt={item.name}
               onError={handleImageError}
             />

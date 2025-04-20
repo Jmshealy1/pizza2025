@@ -1,119 +1,102 @@
 import React, { useState } from "react";
+import "../css/AddGearForm.css";
 
 const API_URL = window.location.hostname.includes("localhost")
   ? "http://localhost:3001"
   : "https://express-rlba.onrender.com";
 
 export default function AddGearForm({ closeForm, updateGearList }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    material: "",
-    pricePerDay: "",
-    rating: "",
-    description: "",
-    main_image: null,
-  });
+  const [preview, setPreview] = useState(null);
+  const [status, setStatus] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "main_image") {
-      setFormData((prev) => ({ ...prev, main_image: files[0] }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) setPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatus("Submitting...");
 
-    const form = new FormData();
-    Object.entries(formData).forEach(([key, val]) => {
-      form.append(key, val);
-    });
+    const formData = new FormData(e.target);
 
     try {
       const res = await fetch(`${API_URL}/api/gear`, {
         method: "POST",
-        body: form,
+        body: formData,
       });
 
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Failed to add gear.");
+      const data = await res.json();
+
+      if (res.ok) {
+        updateGearList(data);
+        setStatus("Gear added successfully!");
+        closeForm();
+      } else {
+        setStatus(data.message || "Failed to add gear.");
       }
-
-      const newItem = await res.json();
-
-      // Ensure the image path is properly formatted
-      if (newItem.main_image && !newItem.main_image.startsWith("images/")) {
-        newItem.main_image = `images/${newItem.main_image}`;
-      }
-
-      updateGearList(newItem);
-      closeForm();
     } catch (err) {
-      alert("Upload failed: " + err.message);
+      setStatus("Error: " + err.message);
     }
   };
 
   return (
-    <div className="add-gear-form">
-      <h3>Add New Gear</h3>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <input
-          type="text"
-          name="name"
-          placeholder="Gear Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="material"
-          placeholder="Material"
-          value={formData.material}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="pricePerDay"
-          placeholder="Price Per Day"
-          value={formData.pricePerDay}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="rating"
-          placeholder="Rating"
-          step="0.1"
-          min="0"
-          max="5"
-          value={formData.rating}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Description (optional)"
-          value={formData.description}
-          onChange={handleChange}
-        />
-        <input
-          type="file"
-          name="main_image"
-          accept="image/*"
-          onChange={handleChange}
-          required
-        />
-        <div className="form-buttons">
-          <button type="submit">Submit</button>
-          <button type="button" onClick={closeForm}>Cancel</button>
+    <div className="w3-modal" style={{ display: "block" }}>
+      <div className="w3-modal-content">
+        <div className="w3-container">
+          <span
+            className="w3-button w3-display-topright"
+            onClick={closeForm}
+          >
+            &times;
+          </span>
+
+          <form id="add-gear-form" onSubmit={handleSubmit}>
+            <h3>Add New Gear</h3>
+
+            <p>
+              <label>Name:</label>
+              <input type="text" name="name" required minLength={3} />
+            </p>
+
+            <p>
+              <label>Material:</label>
+              <input type="text" name="material" required />
+            </p>
+
+            <p>
+              <label>Price Per Day:</label>
+              <input type="number" name="pricePerDay" step="0.01" required />
+            </p>
+
+            <p>
+              <label>Rating:</label>
+              <input type="number" name="rating" step="0.1" min="0" max="5" required />
+            </p>
+
+            <p>
+              <label>Description:</label>
+              <input type="text" name="description" />
+            </p>
+
+            <p>
+              <label>Image:</label>
+              <input type="file" name="main_image" accept="image/*" onChange={handleImageChange} />
+            </p>
+
+            {preview && (
+              <p>
+                <img id="img-prev" src={preview} alt="Preview" />
+              </p>
+            )}
+
+            <p>
+              <button type="submit">Submit</button>
+            </p>
+            <p>{status}</p>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
