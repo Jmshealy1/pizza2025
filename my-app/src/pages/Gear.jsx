@@ -15,9 +15,7 @@ export default function Gear() {
   useEffect(() => {
     fetch(`${API_URL}/api/gear`)
       .then((res) => res.json())
-      .then((data) => {
-        setGearData(data);
-      })
+      .then((data) => setGearData(data))
       .catch((err) => console.error("Error loading gear data:", err));
   }, []);
 
@@ -89,7 +87,6 @@ export default function Gear() {
   return (
     <div className="gear-page">
       <h2>Hunting Gear & Reviews</h2>
-
       <button id="add-gear" onClick={openAddDialog}>+</button>
 
       {showAddDialog && (
@@ -111,9 +108,7 @@ export default function Gear() {
               <h3>{item.name}</h3>
               <p><strong>Material:</strong> {item.material || "N/A"}</p>
               <p><strong>Rating:</strong> {item.rating ?? "N/A"}</p>
-              <p className="price">
-                {item.pricePerDay !== undefined ? `$${item.pricePerDay} per day` : "Price N/A"}
-              </p>
+              <p className="price">{item.pricePerDay !== undefined ? `$${item.pricePerDay} per day` : "Price N/A"}</p>
               <div className="cart-controls">
                 <label>
                   Days:
