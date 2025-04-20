@@ -223,18 +223,38 @@ body {
   }
   
   #add-gear {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    font-size: 2rem;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #2d7dd2;
+    font-size: 28px;
+    padding: 6px 16px;
+    background: #28a745;
     color: white;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
+    margin-bottom: 1rem;
+  }
+  
+  .form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+  }
+  
+  .add-gear-form {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 20px;
     z-index: 1000;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
   }
   @media only screen and (max-width: 768px) {
     .menu-icon {
