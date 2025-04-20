@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import AddGearForm from "../components/AddGearForm";
 import "../css/Gear.css";
 
-// Automatically switch between local dev and production
 const API_URL = window.location.hostname.includes("localhost")
   ? "http://localhost:3001"
   : "https://express-rlba.onrender.com";
@@ -17,7 +16,6 @@ export default function Gear() {
     fetch(`${API_URL}/api/gear`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Loaded gear data:", data);
         setGearData(data);
       })
       .catch((err) => console.error("Error loading gear data:", err));
@@ -63,15 +61,14 @@ export default function Gear() {
     e.target.src = `${API_URL}/images/default.jpg`;
   };
 
-  const openAddDialog = () => {
-    console.log("Opening form");
-    setShowAddDialog(true);
-  };
-
+  const openAddDialog = () => setShowAddDialog(true);
   const closeAddDialog = () => setShowAddDialog(false);
 
   const updateGearList = (newItem) => {
-    setGearData((prev) => [...prev, newItem]);
+    setGearData((prev) => {
+      const exists = prev.some((item) => item._id === newItem._id || item.name === newItem.name);
+      return exists ? prev : [...prev, newItem];
+    });
   };
 
   const handleDelete = async (id) => {
@@ -96,7 +93,10 @@ export default function Gear() {
       <button id="add-gear" onClick={openAddDialog}>+</button>
 
       {showAddDialog && (
-        <AddGearForm closeForm={closeAddDialog} updateGearList={updateGearList} />
+        <>
+          <div className="form-overlay" onClick={closeAddDialog}></div>
+          <AddGearForm closeForm={closeAddDialog} updateGearList={updateGearList} />
+        </>
       )}
 
       <div className="gear-list">
