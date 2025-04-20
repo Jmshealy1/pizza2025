@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AddGearForm from "../components/AddGearForm";
+import EditGearForm from "../components/EditGearForm";
 import "../css/Gear.css";
 
 const API_URL = window.location.hostname.includes("localhost")
@@ -11,6 +12,8 @@ export default function Gear() {
   const [cart, setCart] = useState({});
   const [quantities, setQuantities] = useState({});
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+  const [result, setResult] = useState("");
 
   useEffect(() => {
     fetch(`${API_URL}/api/gear`)
@@ -61,6 +64,7 @@ export default function Gear() {
 
   const openAddDialog = () => setShowAddDialog(true);
   const closeAddDialog = () => setShowAddDialog(false);
+  const closeEditDialog = () => setEditItem(null);
 
   const updateGearList = (newItem) => {
     if (newItem.main_image?.includes("/")) {
@@ -84,20 +88,39 @@ export default function Gear() {
 
     if (response.ok) {
       setGearData((prev) => prev.filter((item) => item._id !== id));
+      setResult("Gear deleted successfully.");
     } else {
-      alert("Failed to delete item.");
+      setResult("Failed to delete item.");
     }
+  };
+
+  const handleEdit = (item) => {
+    setEditItem(item);
   };
 
   return (
     <div className="gear-page">
       <h2>Hunting Gear & Reviews</h2>
       <button id="add-gear" onClick={openAddDialog}>+</button>
+      {result && <p className="status-message">{result}</p>}
 
       {showAddDialog && (
         <div className="w3-modal" style={{ display: "block" }}>
           <div className="w3-modal-content">
             <AddGearForm closeForm={closeAddDialog} updateGearList={updateGearList} />
+          </div>
+        </div>
+      )}
+
+      {editItem && (
+        <div className="w3-modal" style={{ display: "block" }}>
+          <div className="w3-modal-content">
+            <EditGearForm
+              item={editItem}
+              closeForm={closeEditDialog}
+              updateGearList={updateGearList}
+              setResult={setResult}
+            />
           </div>
         </div>
       )}
@@ -126,6 +149,7 @@ export default function Gear() {
                   />
                 </label>
                 <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
+                <button onClick={() => handleEdit(item)}>Edit</button>
                 <button className="delete-btn" onClick={() => handleDelete(item._id)}>Delete</button>
               </div>
             </div>
