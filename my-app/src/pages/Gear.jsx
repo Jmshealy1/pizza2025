@@ -23,7 +23,6 @@ export default function Gear() {
   const handleAddToCart = (item) => {
     const rawDays = quantities[item._id];
     const days = isNaN(parseInt(rawDays)) || parseInt(rawDays) <= 0 ? 1 : parseInt(rawDays);
-
     const price = parseFloat(item.pricePerDay ?? 0);
     const total = isNaN(price * days) ? 0 : price * days;
 
@@ -61,7 +60,11 @@ export default function Gear() {
     e.target.src = `${API_URL}/images/default.jpg`;
   };
 
-  const openAddDialog = () => setShowAddDialog(true);
+  const openAddDialog = () => {
+    console.log("Opening form");
+    setShowAddDialog(true);
+  };
+
   const closeAddDialog = () => setShowAddDialog(false);
 
   const updateGearList = (newItem) => {
@@ -90,10 +93,7 @@ export default function Gear() {
       <button id="add-gear" onClick={openAddDialog}>+</button>
 
       {showAddDialog && (
-        <AddGearForm
-          closeForm={closeAddDialog}
-          updateGearList={updateGearList}
-        />
+        <AddGearForm closeForm={closeAddDialog} updateGearList={updateGearList} />
       )}
 
       <div className="gear-list">
@@ -113,7 +113,7 @@ export default function Gear() {
               </p>
               <div className="cart-controls">
                 <label>
-                  Days:{" "}
+                  Days:
                   <input
                     type="number"
                     min="1"
