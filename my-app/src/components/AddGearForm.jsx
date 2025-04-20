@@ -6,97 +6,68 @@ const API_URL = window.location.hostname.includes("localhost")
   : "https://express-rlba.onrender.com";
 
 export default function AddGearForm({ closeForm, updateGearList }) {
-  const [preview, setPreview] = useState(null);
-  const [status, setStatus] = useState("");
+  const [result, setResult] = useState("");
+  const [preview, setPreview] = useState("");
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setPreview(URL.createObjectURL(file));
+  const handleImagePreview = (e) => {
+    setPreview(URL.createObjectURL(e.target.files[0]));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus("Submitting...");
+    setResult("Sending...");
 
     const formData = new FormData(e.target);
 
     try {
-      const res = await fetch(`${API_URL}/api/gear`, {
+      const response = await fetch(`${API_URL}/api/gear`, {
         method: "POST",
         body: formData,
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (res.ok) {
+      if (response.status === 200) {
         updateGearList(data);
-        setStatus("Gear added successfully!");
+        e.target.reset();
+        setPreview("");
+        setResult("Gear added successfully.");
         closeForm();
       } else {
-        setStatus(data.message || "Failed to add gear.");
+        setResult(data.message || "Error adding gear.");
       }
     } catch (err) {
-      setStatus("Error: " + err.message);
+      setResult("Network error: " + err.message);
     }
   };
 
   return (
-    <div className="w3-modal" style={{ display: "block" }}>
-      <div className="w3-modal-content">
-        <div className="w3-container">
-          <span
-            className="w3-button w3-display-topright"
-            onClick={closeForm}
-          >
-            &times;
-          </span>
+    <form id="add-gear-form" onSubmit={handleSubmit}>
+      <h3>Add New Gear</h3>
 
-          <form id="add-gear-form" onSubmit={handleSubmit}>
-            <h3>Add New Gear</h3>
+      <label htmlFor="name">Name:</label>
+      <input name="name" id="name" type="text" required minLength={3} />
 
-            <p>
-              <label>Name:</label>
-              <input type="text" name="name" required minLength={3} />
-            </p>
+      <label htmlFor="material">Material:</label>
+      <input name="material" id="material" type="text" required />
 
-            <p>
-              <label>Material:</label>
-              <input type="text" name="material" required />
-            </p>
+      <label htmlFor="pricePerDay">Price per Day ($):</label>
+      <input name="pricePerDay" id="pricePerDay" type="number" step="0.01" min="0" required />
 
-            <p>
-              <label>Price Per Day:</label>
-              <input type="number" name="pricePerDay" step="0.01" required />
-            </p>
+      <label htmlFor="rating">Rating (0–5):</label>
+      <input name="rating" id="rating" type="number" step="0.1" min="0" max="5" required />
 
-            <p>
-              <label>Rating:</label>
-              <input type="number" name="rating" step="0.1" min="0" max="5" required />
-            </p>
+      <label htmlFor="description">Description:</label>
+      <input name="description" id="description" type="text" />
 
-            <p>
-              <label>Description:</label>
-              <input type="text" name="description" />
-            </p>
+      <label htmlFor="main_image">Upload Image:</label>
+      <input name="main_image" id="main_image" type="file" accept="image/*" onChange={handleImagePreview} />
 
-            <p>
-              <label>Image:</label>
-              <input type="file" name="main_image" accept="image/*" onChange={handleImageChange} />
-            </p>
+      {preview && <img id="img-preview" src={preview} alt="preview" style={{ maxWidth: "200px", marginTop: "1rem" }} />}
 
-            {preview && (
-              <p>
-                <img id="img-prev" src={preview} alt="Preview" />
-              </p>
-            )}
-
-            <p>
-              <button type="submit">Submit</button>
-            </p>
-            <p>{status}</p>
-          </form>
-        </div>
-      </div>
-    </div>
+      <button type="submit">Submit</button>
+      <button type="button" onClick={closeForm}>Cancel</button>
+      <p>{result}</p>
+    </form>
   );
 }

@@ -2,7 +2,7 @@
   "name": "pizza2025",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Jmshealy1.github.io/pizza2025",
+  "homepage": "https://jmshealy1.github.io/pizza2025",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
